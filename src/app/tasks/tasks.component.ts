@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { TaskComponent } from './task/task.component';
 import { NewTaskComponent } from './new-task/new-task.component';
+import { NewTaskData } from './task/task.model';
 
 @Component({
   selector: 'app-tasks',
@@ -10,8 +11,8 @@ import { NewTaskComponent } from './new-task/new-task.component';
   imports: [TaskComponent, NewTaskComponent],
 })
 export class TasksComponent {
-  @Input({ required: true }) userId!: string | undefined;
-  @Input({ required: true }) name!: string | undefined;
+  @Input({ required: true }) userId!: string;
+  @Input({ required: true }) name!: string;
 
   isAddingTask = false;
 
@@ -54,6 +55,18 @@ export class TasksComponent {
   }
 
   onCancelAddTask() {
+    this.isAddingTask = false;
+  }
+
+  onAddTask(taskData: NewTaskData) {
+    //pushではなくunshiftを使うことで、新しいタスクが一番上に追加される
+    this.tasks.unshift({
+      id: new Date().getTime().toString(),
+      userId: this.userId,
+      title: taskData.title,
+      summary: taskData.summary,
+      dueDate: taskData.date,
+    });
     this.isAddingTask = false;
   }
 }
